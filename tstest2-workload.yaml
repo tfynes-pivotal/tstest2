@@ -1,0 +1,28 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: tstest2
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    apps.tanzu.vmware.com/auto-configure-actuators: "true"
+    app.kubernetes.io/part-of: tstest2
+spec:
+  params:
+  - name: annotations
+    value:
+      autoscaling.knative.dev/min-scale: "1"
+  build:
+    env:
+    - name: BP_JVM_VERSION
+      value: "21"
+  source:
+    git:
+      url: https://github.com/tfynes-pivotal/tstest2
+      ref:
+        branch: main
+  serviceClaims:
+  - name: pgdb1
+    ref:
+      apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+      kind: ClassClaim
+      name: pgdb1
